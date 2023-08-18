@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Enter the input and output paths</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            display: flex; /* Make the body a flex container */
+        }
+
+        /* Left column styles */
+        .left-column {
+            flex: 1; /* Take up remaining space */
+        }
+
+        /* Right column styles */
+        .right-column {
+            flex: 1; /* Take up remaining space */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Add spacing between left and right columns */
+        .right-column {
+            margin-left: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"] {
+            width: 300px;
+            padding: 5px;
+        }
+
+        .input-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px; /* Increased gap between text boxes and buttons */
+        }
+
+        #doneButtonContainer {
+            margin-top: 10px;
+        }
+
+        #embedButton {
+            margin-left: 10px;
+        }
+
+        #statusContainer {
+            display: flex;
+            align-items: center;
+        }
+
+        #statusText {
+            margin-left: 20px; /* Margin between buttons and status text */
+        }
+
+        /* Add margin to the second label (Output Path) */
+        label:nth-of-type(2) {
+            margin-top: 10px;
+        }
+
+        /* Hide the text boxes initially */
+        .hidden {
+            display: none;
+        }
+
+        /* Login form styles */
+        .login-form {
+            width: 300px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .login-form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .login-form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Left column -->
+    <div class="left-column">
+        <h1>Select whether you will be using a new or existing sheet. If account is banned, enter new details into the login bar.</h1>
+    
+        <!-- Prompt for sheet status -->
+        <h2>Click the below applying to your situation.</h2>
+        <div id="statusContainer">
+            <button id="newSheetButton">New Sheet</button>
+            <button id="oldSheetButton">Existing Sheet</button>
+            <div id="pathStatus">
+                <!-- Status text will be displayed here -->
+            </div>
+        </div>
+
+        <div id="inputOutputContainer" class="hidden">
+            <div class="input-container">
+                <label for="inputPath">Input Sheet Path:</label>
+                <input type="text" id="inputPath" placeholder="Enter input path here">
+            </div>
+
+            <div class="input-container">
+                <label for="outputPath">Output Sheet Path:</label>
+                <input type="text" id="outputPath" placeholder="Enter output path here">
+            </div>
+
+            <div class="input-container">
+                <label for="textPath">Start Text Path:</label>
+                <input type="text" id="textPath" placeholder="Enter text path here">
+            </div>
+
+            <div id="doneButtonContainer">
+                <button id="embedButton">Done</button>
+            </div>
+        </div>
+
+        <div id="embeddedData">
+            <!-- Embedded data will be displayed here -->
+        </div>
+    </div>
+
+    <!-- Middle section -->
+    <div id="middleSection" class="middle-column">
+        <h2>Enter a number:</h2>
+        <div class="input-container">
+            <label for="inputNumber">Number of Windows (Max is 20):</label>
+            <input type="number" id="inputNumber" placeholder="Enter a number">
+        </div>
+        <button id="numSelectedButton">Num Selected</button>
+        <div id="selectedNumData">
+            <!-- Selected number data will be displayed here -->
+        </div>
+    </div>
+
+    <!-- Right column -->
+    <div class="right-column">
+        <h2><span id="loginStatus">Old</span></h2> <!-- Status label above login form -->
+        <div class="login-form">
+            <input type="text" id="usernameInput" placeholder="Username">
+            <input type="password" id="passwordInput" placeholder="Password">
+            <button id="loginButton">Log In</button>
+        </div>
+        <div id="loginInfo">
+            <!-- Login information will be displayed here -->
+        </div>
+    </div>
+    <script>
+        // Function to embed the selected number data
+        //
+        function embedSelectedNumber(number) {
+            const selectedNumDataElement = document.getElementById('selectedNumData');
+            const selectedNumDataHTML = `
+                <h3>Selected Number Data:</h3>
+                <p class="selected-number">${number}</p>
+            `;
+            selectedNumDataElement.innerHTML = selectedNumDataHTML;
+        }
+    
+        // Handle the click event for the "Num Selected" button
+        document.getElementById('numSelectedButton').addEventListener('click', function () {
+            const inputNumber = document.getElementById('inputNumber').value;
+            embedSelectedNumber(inputNumber);
+        });
+    </script>
+    <script>
+        // ... Existing JavaScript code ...
+
+        // Handle the click event for the "Log In" button
+        document.getElementById('loginButton').addEventListener('click', function () {
+            const username = document.getElementById('usernameInput').value;
+            const password = document.getElementById('passwordInput').value;
+
+            // Embed the login information into the HTML content
+            const loginInfoHTML = `
+                <h3>Login Information:</h3>
+                <p class = "username">${username}</p>
+                <p class = "password">${password}</p>
+            `;
+
+            // Display the login information
+            const loginInfoElement = document.getElementById('loginInfo');
+            loginInfoElement.innerHTML = loginInfoHTML;
+        });
+    </script>
+    <script>
+        // ... Existing JavaScript code ...
+    
+        // Function to update the status label
+        function updateStatusLabel(status) {
+            const statusLabelElement = document.getElementById('loginStatus');
+            statusLabelElement.textContent = status;
+        }
+    
+        // Handle the click event for the "Log In" button
+        document.getElementById('loginButton').addEventListener('click', function () {
+            const username = document.getElementById('usernameInput').value;
+            const password = document.getElementById('passwordInput').value;
+    
+            // Embed the login information into the HTML content
+            const loginInfoHTML = `
+                <h3>Login Information:</h3>
+                <p class="username">${username}</p>
+                <p class="password">${password}</p>
+            `;
+    
+            // Display the login information
+            const loginInfoElement = document.getElementById('loginInfo');
+            loginInfoElement.innerHTML = loginInfoHTML;
+    
+            // Update the status label to "New" when the login button is clicked
+            updateStatusLabel('New');
+        });
+    </script>
+    <script>
+        // Function to show input/output text boxes and done button
+        function showInputOutput() {
+            const inputOutputContainer = document.getElementById('inputOutputContainer');
+            inputOutputContainer.classList.remove('hidden');
+            updateStatusText("New"); // Update the status text to "New"
+
+            // Clear the embedded data
+            const embeddedDataElement = document.getElementById('embeddedData');
+            embeddedDataElement.innerHTML = '';
+        }
+
+        // Function to hide input/output text boxes and done button
+        function hideInputOutput() {
+            const inputOutputContainer = document.getElementById('inputOutputContainer');
+            inputOutputContainer.classList.add('hidden');
+            updateStatusText("Old"); // Update the status text to "Old"
+        }
+
+        // Function to update the status text
+        function updateStatusText(status) {
+            const statusTextElement = document.getElementById('pathStatus');
+            statusTextElement.textContent = `${status}`;
+        }
+
+        // Handle the click event for the "New Sheet" button
+        document.getElementById('newSheetButton').addEventListener('click', function () {
+            showInputOutput();
+        });
+
+        // Handle the click event for the "Continued Scraping" button
+        document.getElementById('oldSheetButton').addEventListener('click', function () {
+            hideInputOutput();
+
+            // Clear the embedded data
+            const embeddedDataElement = document.getElementById('embeddedData');
+            embeddedDataElement.innerHTML = '';
+        });
+
+        // Handle the click event for the "Done" button (for input/output paths)
+        document.getElementById('embedButton').addEventListener('click', function () {
+            const inputPath = document.getElementById('inputPath').value;
+            const outputPath = document.getElementById('outputPath').value;
+            const textPath = document.getElementById('textPath').value;
+
+            // Embed the user input data into the HTML content
+            const embeddedDataHTML = `
+                <h2>Embedded Data:</h2>
+                <p class="input">${inputPath}</p>
+                <p class="output">${outputPath}</p>
+                <p class="text">${textPath}</p>
+            `;
+
+            // Update the status text to "New" after embedding the data
+            updateStatusText("New");
+
+            // Display the embedded data
+            const embeddedDataElement = document.getElementById('embeddedData');
+            embeddedDataElement.innerHTML = embeddedDataHTML;
+        });
+    </script>
+</body>
+</html>
