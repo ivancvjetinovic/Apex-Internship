@@ -177,7 +177,7 @@ class Transformers(object):
 			out_text.append(wnl.lemmatize(w, pos="v"))
 		return " ".join(out_text)
 
-	def translate_text(self, text, target_language='en'):
+	def translate_text(self, text):
 		n, left, right = len(text), 0, 0
 		out_text = set()
 		translator = Translator()
@@ -186,7 +186,7 @@ class Transformers(object):
 			right += 100
 			for word in text.split()[left:right]:
 				if not word.isascii():
-					word = translator.translate(word, src='ja', dest=target_language)
+					word = translator.translate(word, src='ja', dest='en')
 				out_text.add(word)
 			left = right
 		return  " ".join(out_text)
@@ -308,21 +308,18 @@ def all_matches():
 
 def fine_tune(model=SentenceTransformer('all-mpnet-base-v2')):
 	train_matches = [
-		InputExample(texts=[candidates['0035h00001968tWAAQ'][1], jobs['a0s5h000002AHa8AAG'][1]], label=0.9),
-		InputExample(texts=[candidates['0035h00001968tWAAQ'][1], jobs['a0s5h0000022lLiAAI'][1]], label=0.1),
+		# training blueprint
+		InputExample(texts=[<candidate_text>, <job_text>], label=<score>),
 	]
 	train_dataloader = DataLoader(train_matches, shuffle=True)
 	train_loss = losses.CosineSimilarityLoss(model)
-	model.fit(train_objectives=[(train_dataloader, train_loss)], epochs=10, output_path="C:\\Users\\ivan_apexes\\Desktop\\clonebot\\new_model")
+	model.fit(train_objectives=[(train_dataloader, train_loss)], epochs=10, output_path=<pathname>)
 	return model
 
 if __name__ == "__main__":
 	# model = fine_tune()
-	# job_input_path = ""
-	# candidate_input_path = ""
-
-	job_input_path = "C:\\Users\\ivan_apexes\\Downloads\\100 Contacts.xlsx - 1000 jobs.csv"
-	candidate_input_path = "C:\\Users\\ivan_apexes\\Downloads\\100 Contacts.xlsx - 1000 candidates.csv"
+	job_input_path = <pathname>
+	candidate_input_path = <pathname>
 	jdf = pd.read_csv(job_input_path)
 	while (jdf.columns[0] != "Id"):
 		jdf = jdf.drop(jdf.columns[0], axis=1)
@@ -333,10 +330,10 @@ if __name__ == "__main__":
 	cdf.to_csv(candidate_input_path, index=False)
 	JobTransformer(jdf).run()
 	CandidateTransformer(cdf).run()
-
+	
 	# all_matches()
-	# specific_jobs('0035h00001968tWAAQ',['a0s5h0000022lK7AAI','a0s5h0000022lRtAAI','a0s5h0000022lLiAAI'])
-	# one_candidate('0035h00001968tWAAQ')
+	# specific_jobs(<candidate_id>,[<job_id>, <job_id>, <job_id>])
+	# one_candidate(<candidate_id>)
 	
 	# k nearest jobs to candidate
 	data = torch.load('job_tensors.pt')
@@ -346,7 +343,7 @@ if __name__ == "__main__":
 
 	NEAREST_NEIGHBORS = MAX_SUGGESTIONS
 	data = torch.load('candidate_tensors.pt')
-	candidate = data['0035h00001968tWAAQ'][0]
+	candidate = data[<candidate_id>][0]
 	kmeans = KMeans(init = 'k-means++', n_init='auto', n_clusters=10, random_state=34)
 	kmeans.fit(X)
 	distances = [euclidean(candidate, centroid) for centroid in kmeans.cluster_centers_]
